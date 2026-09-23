@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
 
             $table->string('nama_lengkap');
-            $table->string('email')->nullable();
+            $table->string('email')->unique();
             $table->string('nickname', 100)->nullable();
             $table->string('foto_profil')->nullable();
             $table->json('hobi')->nullable(); 
