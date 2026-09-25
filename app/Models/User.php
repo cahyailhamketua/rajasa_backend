@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -40,6 +41,10 @@ class User extends Authenticatable
         ];
     }
 
+    protected $appends = [
+        'foto_profil_url',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relationships
@@ -64,5 +69,14 @@ class User extends Authenticatable
     public function passwordResetOtps(): HasMany
     {
         return $this->hasMany(PasswordResetOtp::class);
+    }
+
+    public function getFotoProfilUrlAttribute(): ?string
+    {
+        if (!$this->foto_profil) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->foto_profil);
     }
 }
