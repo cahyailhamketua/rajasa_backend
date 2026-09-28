@@ -43,6 +43,7 @@ class Gallery extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(GalleryImage::class);
+        return $this->hasMany(GalleryImage::class)
+            ->orderBy('urutan');
     }
 }
