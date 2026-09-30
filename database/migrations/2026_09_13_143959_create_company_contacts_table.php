@@ -16,8 +16,6 @@ return new class extends Migration
 
             $table->string('url', 500)->nullable();
 
-            $table->string('icon', 100)->nullable();
-
             $table->unsignedInteger('urutan')->default(0);
 
             $table->boolean('is_active')->default(true);

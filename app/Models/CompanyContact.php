@@ -13,7 +13,6 @@ class CompanyContact extends Model
         'platform',
         'username',
         'url',
-        'icon',
         'urutan',
         'is_active',
     ];

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\ArticleCategoryController;
+use App\Http\Controllers\Api\CompanyContactController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -30,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users/{user}/reset-password', [AuthController::class, 'resetPassword']) ->middleware('role:super_admin');
 });
 
+
 // Authenticated routes for galleries
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/galleries/mine', [GalleryController::class, 'mine']);
@@ -41,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // Public routes for galleries
 Route::get('/galleries', [GalleryController::class, 'index']);
 Route::get('/galleries/{gallery}', [GalleryController::class, 'show']);
+
 
 // Authenticated routes for articles and article categories
 Route::middleware('auth:sanctum')->group(function () {
@@ -60,3 +63,15 @@ Route::get('/articles/{article}', [ArticleController::class, 'show']);
 // Article Category
 Route::get('/article-categories', [ArticleCategoryController::class, 'index']);
 Route::get('/article-categories/{articleCategory}', [ArticleCategoryController::class, 'show']);
+
+
+// Authenticated super_admin routes for company contacts
+Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
+    Route::post('/company-contacts', [CompanyContactController::class, 'store']);
+    Route::match(['put', 'patch'], '/company-contacts/{companyContact}', [CompanyContactController::class, 'update']);
+    Route::delete('/company-contacts/{companyContact}', [CompanyContactController::class, 'destroy']);
+});
+
+// Public routes for company contacts
+Route::get('/company-contacts', [CompanyContactController::class, 'index']);
+Route::get('/company-contacts/{companyContact}', [CompanyContactController::class, 'show']);
