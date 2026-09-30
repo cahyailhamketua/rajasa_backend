@@ -30,12 +30,6 @@ class GalleryController extends Controller
             'images',
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Filter by user_id
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->filled('user_id')) {
             $query->where(
                 'user_id',
@@ -43,36 +37,10 @@ class GalleryController extends Controller
             );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Filter by year
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->filled('tahun')) {
             $query->whereYear(
                 'tanggal_kegiatan',
                 $request->integer('tahun')
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Filter user's own galleries
-        |--------------------------------------------------------------------------
-        */
-
-        if ($request->boolean('mine')) {
-            if (!$request->user()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Unauthenticated.',
-                ], 401);
-            }
-
-            $query->where(
-                'user_id',
-                $request->user()->id
             );
         }
 
@@ -89,6 +57,43 @@ class GalleryController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data gallery berhasil diambil.',
+            'data' => $galleries,
+        ]);
+    }
+
+    /**
+     * Display a listing of galleries owned by the authenticated user.
+     */
+    public function mine(Request $request): JsonResponse
+    {
+        $query = Gallery::with([
+            'user:id,username,nama_lengkap,nickname,foto_profil',
+            'images',
+        ])->where(
+            'user_id',
+            $request->user()->id
+        );
+
+        if ($request->filled('tahun')) {
+            $query->whereYear(
+                'tanggal_kegiatan',
+                $request->integer('tahun')
+            );
+        }
+
+        $perPage = min(
+            $request->integer('per_page', 12),
+            100
+        );
+
+        $galleries = $query
+            ->latest('tanggal_kegiatan')
+            ->latest('id')
+            ->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data gallery milik user berhasil diambil.',
             'data' => $galleries,
         ]);
     }
