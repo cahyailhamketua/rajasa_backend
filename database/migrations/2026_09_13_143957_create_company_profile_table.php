@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('nama')->nullable();
             $table->string('tagline')->nullable();
 
-            $table->text('deskripsi_singkat')->nullable();
             $table->longText('deskripsi')->nullable();
 
             $table->string('logo')->nullable();

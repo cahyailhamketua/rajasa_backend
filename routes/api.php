@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\ArticleCategoryController;
 use App\Http\Controllers\Api\CompanyContactController;
+use App\Http\Controllers\Api\CompanyProfileController;
+use App\Http\Controllers\Api\CompanyHistoryController;
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -75,3 +77,27 @@ Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
 // Public routes for company contacts
 Route::get('/company-contacts', [CompanyContactController::class, 'index']);
 Route::get('/company-contacts/{companyContact}', [CompanyContactController::class, 'show']);
+
+
+// Authenticated super_admin routes for company profile
+Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
+    Route::post('/company-profiles', [CompanyProfileController::class, 'store']);
+    Route::match(['put', 'patch'], '/company-profiles/{companyProfile}', [CompanyProfileController::class, 'update']);
+    Route::delete('/company-profiles/{companyProfile}', [CompanyProfileController::class, 'destroy']);
+});
+
+// Public routes for company profile
+Route::get('/company-profiles', [CompanyProfileController::class, 'index']);
+Route::get('/company-profiles/{companyProfile}', [CompanyProfileController::class, 'show']);
+
+
+// Authenticated super_admin routes for company histories
+Route::middleware(['auth:sanctum', 'role:super_admin'])->group(function () {
+    Route::post('/company-histories', [CompanyHistoryController::class, 'store']);
+    Route::match(['put', 'patch'], '/company-histories/{companyHistory}', [CompanyHistoryController::class, 'update']);
+    Route::delete('/company-histories/{companyHistory}', [CompanyHistoryController::class, 'destroy']);
+});
+
+// Public routes for company histories
+Route::get('/company-histories', [CompanyHistoryController::class, 'index']);
+Route::get('/company-histories/{companyHistory}', [CompanyHistoryController::class, 'show']);
