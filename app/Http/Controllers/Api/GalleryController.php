@@ -180,4 +180,50 @@ class GalleryController extends Controller
             'message' => 'Gallery berhasil dihapus.',
         ]);
     }
+
+    /**
+     * Display gallery locations for map.
+     *
+     * Public endpoint.
+     */
+    public function locations(Request $request): JsonResponse
+    {
+        $query = Gallery::query()
+            ->select([
+                'id',
+                'judul',
+                'nama_lokasi',
+                'latitude',
+                'longitude',
+                'tanggal_kegiatan',
+            ])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter by year
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('tahun')) {
+            $query->whereYear(
+                'tanggal_kegiatan',
+                $request->integer('tahun')
+            );
+        }
+
+        $locations = $query
+            ->orderBy('tanggal_kegiatan')
+            ->orderBy('id')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data lokasi gallery berhasil diambil.',
+            'data' => [
+                'locations' => $locations,
+            ],
+        ]);
+    }
 }

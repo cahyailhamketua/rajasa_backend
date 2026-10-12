@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Public routes for galleries
 Route::get('/galleries', [GalleryController::class, 'index']);
+Route::get('/galleries/locations', [GalleryController::class, 'locations']);
 Route::get('/galleries/{gallery}', [GalleryController::class, 'show']);
 
 
